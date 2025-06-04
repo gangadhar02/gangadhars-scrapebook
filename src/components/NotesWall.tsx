@@ -24,30 +24,15 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       
-      {/* Desktop Notes container - 2 column grid */}
-      <div className="relative w-full h-full px-8 py-4">
-        <div className="grid grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {notes.map((note, index) => (
-            <div
-              key={note.id}
-              className="flex justify-center items-start py-4"
-              style={{
-                transform: `rotate(${(index % 4 === 0 || index % 4 === 3) ? 
-                  Math.random() * 4 - 2 : 
-                  Math.random() * 4 - 2}deg)`
-              }}
-            >
-              <StickyNote
-                note={{
-                  ...note,
-                  position: { x: 0, y: 0 },
-                  rotation: 0
-                }}
-                onClick={() => handleNoteClick(note)}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Notes container - Desktop only */}
+      <div className="relative w-full h-full">
+        {notes.map((note) => (
+          <StickyNote
+            key={note.id}
+            note={note}
+            onClick={() => handleNoteClick(note)}
+          />
+        ))}
       </div>
 
       {/* Subtle grid overlay for authenticity */}
