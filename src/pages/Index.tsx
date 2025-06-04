@@ -38,9 +38,7 @@ const Index = () => {
   return <div className="min-h-screen relative overflow-hidden paper-texture">
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
-        <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
-          Gangadhar's Memory Lane
-        </h1>
+        <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">Gangadhar's Scrapebook</h1>
         <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">Share your thoughts, memories, and messages on this virtual wall of memories.</p>
       </header>
 
