@@ -13,7 +13,7 @@ const Index = () => {
   const generateNonOverlappingPosition = (existingNotes: StickyNoteType[]) => {
     const noteWidth = 12; // Approximate width in percentage (192px / 1600px)
     const noteHeight = 12; // Approximate height in percentage (192px / 900px)
-    const minDistance = 6; // Reduced for slight edge overlapping
+    const minDistance = 14; // Increased for better spacing
     const maxAttempts = 100;
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -36,8 +36,8 @@ const Index = () => {
       }
     }
     
-    // Fallback: use a more relaxed grid-based approach with slight randomness
-    const gridCols = 7;
+    // Fallback: use a grid-based approach with better spacing
+    const gridCols = 6;
     const gridRows = 3;
     const startY = 35; // Start below the button
     const endY = 75; // End before social icons
@@ -52,17 +52,17 @@ const Index = () => {
         const gridKey = `${col}-${row}`;
         if (!usedPositions.has(gridKey)) {
           return {
-            x: (col * (82 / gridCols)) + Math.random() * 4 + 6,
-            y: startY + (row * ((endY - startY) / gridRows)) + Math.random() * 3
+            x: (col * (82 / gridCols)) + Math.random() * 2 + 6,
+            y: startY + (row * ((endY - startY) / gridRows)) + Math.random() * 2
           };
         }
       }
     }
     
-    // Final fallback - ensure it's always below the button
+    // Final fallback - ensure it's always below the button with good spacing
     return {
-      x: Math.random() * 70 + 10,
-      y: Math.random() * 40 + 35 // Always start from 35% (below button)
+      x: (existingNotes.length % 6) * 14 + 6,
+      y: Math.floor(existingNotes.length / 6) * 15 + 35
     };
   };
   
