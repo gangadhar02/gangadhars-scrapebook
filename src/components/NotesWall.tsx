@@ -19,6 +19,31 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
     });
   };
 
+  // Grid-based positioning to prevent overlapping
+  const getGridPosition = (index: number) => {
+    const columns = 4; // Number of columns in the grid
+    const rows = Math.ceil(notes.length / columns);
+    
+    const col = index % columns;
+    const row = Math.floor(index / columns);
+    
+    // Calculate position with some spacing and random offset within the cell
+    const cellWidth = 100 / columns;
+    const cellHeight = 100 / Math.max(rows, 3); // Minimum 3 rows for better spacing
+    
+    const baseX = col * cellWidth + cellWidth * 0.1; // 10% padding from cell edge
+    const baseY = row * cellHeight + cellHeight * 0.1;
+    
+    // Add small random offset within the cell for natural look
+    const randomOffsetX = Math.random() * (cellWidth * 0.3);
+    const randomOffsetY = Math.random() * (cellHeight * 0.3);
+    
+    return {
+      x: Math.min(baseX + randomOffsetX, 100 - 20), // Ensure note doesn't go off screen
+      y: Math.min(baseY + randomOffsetY, 100 - 25)
+    };
+  };
+
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Background texture overlay */}
@@ -26,13 +51,19 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
       
       {/* Notes container - Desktop only */}
       <div className="relative w-full h-full">
-        {notes.map((note) => (
-          <StickyNote
-            key={note.id}
-            note={note}
-            onClick={() => handleNoteClick(note)}
-          />
-        ))}
+        {notes.map((note, index) => {
+          const gridPosition = getGridPosition(index);
+          return (
+            <StickyNote
+              key={note.id}
+              note={{
+                ...note,
+                position: gridPosition
+              }}
+              onClick={() => handleNoteClick(note)}
+            />
+          );
+        })}
       </div>
 
       {/* Subtle grid overlay for authenticity */}
