@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'handwritten': ['Kalam', 'cursive'],
+				'marker': ['Permanent Marker', 'cursive'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +66,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				scrapbook: {
+					bg: '#f7f3e9',
+					yellow: '#fff59c',
+					pink: '#f8bbd9',
+					blue: '#a3d5ff',
+					green: '#b8e6b8',
+					orange: '#ffcc99',
+					purple: '#d7b3ff',
 				}
 			},
 			borderRadius: {
@@ -84,11 +98,44 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'stick-note': {
+					'0%': {
+						transform: 'scale(0) rotate(0deg)',
+						opacity: '0'
+					},
+					'50%': {
+						transform: 'scale(1.1) rotate(5deg)',
+						opacity: '0.8'
+					},
+					'100%': {
+						transform: 'scale(1) rotate(var(--rotation))',
+						opacity: '1'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 20px rgba(255, 235, 59, 0.3)'
+					},
+					'50%': {
+						boxShadow: '0 0 40px rgba(255, 235, 59, 0.6)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'stick-note': 'stick-note 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'float': 'float 3s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
 			}
 		}
 	},
