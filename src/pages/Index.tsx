@@ -48,7 +48,7 @@ const Index = () => {
       <div className="hidden md:block relative overflow-hidden min-h-screen">
         {/* Header */}
         <header className="relative z-10 text-center py-8 px-4">
-          <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-6xl font-handwritten font-black text-sky-600 mb-4 drop-shadow-lg">
             Gangadhar's Scrapebook
           </h1>
           <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">
@@ -93,7 +93,7 @@ const Index = () => {
         <div className="relative">
           {/* Header */}
           <header className="text-center py-8 px-4 bg-scrapbook-bg relative z-10">
-            <h1 className="text-4xl font-marker text-sky-600 mb-4 drop-shadow-lg">
+            <h1 className="text-4xl font-handwritten font-black text-sky-600 mb-4 drop-shadow-lg">
               Gangadhar's Scrapebook
             </h1>
             <p className="text-lg text-sky-500 max-w-2xl mx-auto">
