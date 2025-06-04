@@ -12,12 +12,12 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
 
   return (
     <div
-      className={`absolute cursor-pointer transform transition-all duration-200 ${
+      className={`cursor-pointer transform transition-all duration-200 ${
         isHovered ? 'scale-110 z-20' : 'z-10'
-      } animate-stick-note`}
+      } animate-stick-note md:absolute relative`}
       style={{
-        left: `${note.position.x}%`,
-        top: `${note.position.y}%`,
+        left: note.position.x > 0 ? `${note.position.x}%` : 'auto',
+        top: note.position.y > 0 ? `${note.position.y}%` : 'auto',
         transform: `rotate(${note.rotation}deg) ${isHovered ? 'scale(1.1)' : 'scale(1)'}`,
         '--rotation': `${note.rotation}deg`,
       } as React.CSSProperties}
@@ -26,7 +26,7 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
       onClick={onClick}
     >
       <div
-        className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative"
+        className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative mx-auto md:mx-0"
         style={{ backgroundColor: note.color }}
       >
         {/* Tape effect */}

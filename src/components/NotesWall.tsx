@@ -24,15 +24,42 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       
-      {/* Notes container */}
+      {/* Notes container - responsive layout */}
       <div className="relative w-full h-full">
-        {notes.map((note) => (
-          <StickyNote
-            key={note.id}
-            note={note}
-            onClick={() => handleNoteClick(note)}
-          />
-        ))}
+        {/* Desktop: Random positioning */}
+        <div className="hidden md:block relative w-full h-full">
+          {notes.map((note) => (
+            <StickyNote
+              key={note.id}
+              note={note}
+              onClick={() => handleNoteClick(note)}
+            />
+          ))}
+        </div>
+
+        {/* Mobile: Vertical stacking */}
+        <div className="md:hidden overflow-y-auto h-full px-4 py-20">
+          <div className="space-y-6 max-w-sm mx-auto">
+            {notes.map((note, index) => (
+              <div
+                key={note.id}
+                className="relative"
+                style={{
+                  transform: `rotate(${(index % 2 === 0 ? 1 : -1) * Math.random() * 3}deg)`,
+                }}
+              >
+                <StickyNote
+                  note={{
+                    ...note,
+                    position: { x: 0, y: 0 },
+                    rotation: 0
+                  }}
+                  onClick={() => handleNoteClick(note)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Subtle grid overlay for authenticity */}
