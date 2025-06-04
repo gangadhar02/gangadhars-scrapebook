@@ -37,27 +37,33 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
           ))}
         </div>
 
-        {/* Mobile: Vertical stacking */}
-        <div className="md:hidden overflow-y-auto h-full px-4 py-4 pt-32">
-          <div className="space-y-4 max-w-xs mx-auto pb-24">
-            {notes.map((note, index) => (
-              <div
-                key={note.id}
-                className="relative w-full flex justify-center"
-                style={{
-                  transform: `rotate(${(index % 2 === 0 ? 1 : -1) * (Math.random() * 2 + 1)}deg)`,
-                }}
-              >
-                <StickyNote
-                  note={{
-                    ...note,
-                    position: { x: 0, y: 0 },
-                    rotation: 0
+        {/* Mobile: Vertical stacking with proper positioning */}
+        <div className="md:hidden absolute top-0 left-0 right-0 bottom-0 overflow-y-auto">
+          {/* Spacer to push content below header */}
+          <div className="h-64"></div>
+          
+          {/* Notes container */}
+          <div className="px-4 py-8">
+            <div className="space-y-6 max-w-xs mx-auto pb-32">
+              {notes.map((note, index) => (
+                <div
+                  key={note.id}
+                  className="relative w-full flex justify-center"
+                  style={{
+                    transform: `rotate(${(index % 2 === 0 ? 1 : -1) * (Math.random() * 3 + 1)}deg)`,
                   }}
-                  onClick={() => handleNoteClick(note)}
-                />
-              </div>
-            ))}
+                >
+                  <StickyNote
+                    note={{
+                      ...note,
+                      position: { x: 0, y: 0 },
+                      rotation: 0
+                    }}
+                    onClick={() => handleNoteClick(note)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
