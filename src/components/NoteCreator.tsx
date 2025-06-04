@@ -12,7 +12,7 @@ interface NoteCreatorProps {
 }
 
 export const NoteCreator = ({ onComplete, onCancel }: NoteCreatorProps) => {
-  const [message, setMessage] = useState("Gangadhar is da best");
+  const [message, setMessage] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [noteColor] = useState(getRandomColor());
 
@@ -54,7 +54,7 @@ export const NoteCreator = ({ onComplete, onCancel }: NoteCreatorProps) => {
           </h3>
 
           <Textarea
-            placeholder="What's on your mind? (max 200 characters)"
+            placeholder="Gangadhar is the best"
             value={message}
             onChange={(e) => setMessage(e.target.value.slice(0, 200))}
             onKeyDown={handleKeyDown}
