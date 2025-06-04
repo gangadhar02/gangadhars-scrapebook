@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -21,7 +22,6 @@ export default {
 			fontFamily: {
 				'handwritten': ['Kalam', 'cursive'],
 				'marker': ['Permanent Marker', 'cursive'],
-				'childhood': ['Childhood', 'cursive'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
