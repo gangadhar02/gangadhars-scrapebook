@@ -3,16 +3,18 @@ import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
 import { StickyNote as StickyNoteType } from "@/types/StickyNote";
+import { STICKY_NOTE_COLORS } from "@/types/StickyNote";
 
 const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [colorIndex, setColorIndex] = useState(0);
 
-  const handleNoteComplete = (noteData: { message: string; color: string; authorName?: string }) => {
+  const handleNoteComplete = (noteData: { message: string; authorName?: string }) => {
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
       message: noteData.message,
-      color: noteData.color,
+      color: STICKY_NOTE_COLORS[colorIndex],
       authorName: noteData.authorName,
       position: {
         x: Math.random() * 70 + 10, // Random position between 10% and 80%
@@ -23,6 +25,7 @@ const Index = () => {
     };
 
     setNotes((prevNotes) => [...prevNotes, newNote]);
+    setColorIndex((prevIndex) => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
     setIsCreating(false);
   };
 
@@ -38,11 +41,11 @@ const Index = () => {
     <div className="min-h-screen relative overflow-hidden paper-texture">
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
-        <h1 className="text-4xl md:text-6xl font-marker text-amber-800 mb-4 drop-shadow-lg">
-          Gangadhar's Scrapbook
+        <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
+          Gangadhar's Memory Lane
         </h1>
-        <p className="text-lg md:text-xl text-amber-700 max-w-2xl mx-auto">
-          Leave a note on our virtual wall! Click below to add your message to the scrapbook.
+        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">
+          Welcome to my personal space! Share your thoughts, memories, and messages on this virtual wall of memories.
         </p>
       </header>
 
@@ -72,7 +75,7 @@ const Index = () => {
       {/* Instructions for empty state */}
       {notes.length === 0 && !isCreating && (
         <div className="absolute inset-0 flex items-center justify-center z-5 pointer-events-none">
-          <div className="text-center text-amber-600/60 max-w-md mx-auto px-4">
+          <div className="text-center text-sky-400/60 max-w-md mx-auto px-4">
             <div className="text-6xl mb-4 animate-float">📋</div>
             <p className="text-xl font-handwritten">
               This wall is waiting for your first note!
