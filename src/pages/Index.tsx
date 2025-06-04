@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
 import { SocialIcons } from "@/components/SocialIcons";
@@ -9,13 +9,26 @@ const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if screen is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   const generateGridPosition = (noteIndex: number) => {
-    const notesPerRow = 5; // 5 notes per row
-    const noteSpacing = 18; // Spacing between notes in percentage
-    const startX = 8; // Starting X position
+    const notesPerRow = isMobile ? 2 : 5; // 2 notes per row on mobile, 5 on desktop
+    const noteSpacing = isMobile ? 40 : 18; // More spacing on mobile
+    const startX = isMobile ? 10 : 8; // Adjusted starting position for mobile
     const startY = 35; // Starting Y position (below button)
-    const rowHeight = 25; // Height between rows
+    const rowHeight = isMobile ? 30 : 25; // More row height on mobile
     
     // Calculate row and column for this note
     const row = Math.floor(noteIndex / notesPerRow);
@@ -58,8 +71,9 @@ const Index = () => {
   // Calculate dynamic height based on number of notes
   const calculateMinHeight = () => {
     if (notes.length === 0) return "100vh";
-    const rows = Math.ceil(notes.length / 5);
-    const minHeight = 500 + (rows * 250); // Base height + rows * approximate note height
+    const notesPerRow = isMobile ? 2 : 5;
+    const rows = Math.ceil(notes.length / notesPerRow);
+    const minHeight = 500 + (rows * (isMobile ? 300 : 250)); // More height per row on mobile
     return `${Math.max(minHeight, window.innerHeight)}px`;
   };
   
