@@ -14,7 +14,7 @@ const Index = () => {
   const [colorIndex, setColorIndex] = useState(0);
   const [containerHeight, setContainerHeight] = useState(window.innerHeight);
 
-  // Update container height when notes change
+  // Update container height only when notes actually need more space
   useEffect(() => {
     if (notes.length > 0) {
       // Convert percentage positions back to pixels for calculation
@@ -24,9 +24,12 @@ const Index = () => {
       }));
       
       const requiredHeight = calculateRequiredHeight(pixelPositions);
-      setContainerHeight(Math.max(requiredHeight, window.innerHeight));
+      // Only update if we actually need more height
+      if (requiredHeight > containerHeight) {
+        setContainerHeight(requiredHeight);
+      }
     }
-  }, [notes, containerHeight]);
+  }, [notes]);
 
   const handleNoteComplete = (noteData: {
     message: string;
@@ -40,7 +43,7 @@ const Index = () => {
       y: (note.position.y / 100) * containerHeight
     }));
 
-    // Find available position in pixels (will be below hero section)
+    // Find available position in pixels (prioritizes current screen space)
     const pixelPosition = findAvailablePosition(
       existingPixelPositions,
       containerWidth,

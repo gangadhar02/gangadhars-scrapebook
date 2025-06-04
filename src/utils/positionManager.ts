@@ -47,57 +47,65 @@ export const findAvailablePosition = (
   containerWidth: number,
   containerHeight: number
 ): Position => {
-  const maxAttempts = 100;
-  let attempts = 0;
-  
   // Calculate usable area starting below hero section
   const minY = HERO_SECTION_HEIGHT + VIEWPORT_PADDING;
   const usableWidth = containerWidth - NOTE_WIDTH - (VIEWPORT_PADDING * 2);
-  const usableHeight = containerHeight - NOTE_HEIGHT - minY - VIEWPORT_PADDING;
   
-  while (attempts < maxAttempts) {
-    const x = VIEWPORT_PADDING + Math.random() * usableWidth;
-    const y = minY + Math.random() * Math.max(usableHeight, NOTE_HEIGHT);
-    
-    const newPosition = { x, y };
-    
-    if (!checkCollision(newPosition, existingPositions)) {
-      return newPosition;
-    }
-    
-    attempts++;
+  // First try to fill current screen space
+  const currentScreenMaxY = Math.max(window.innerHeight - NOTE_HEIGHT - VIEWPORT_PADDING, minY);
+  const currentScreenHeight = currentScreenMaxY - minY;
+  
+  // Try grid positioning within current screen first
+  const gridPosition = findGridPositionInArea(
+    existingPositions, 
+    containerWidth, 
+    minY, 
+    currentScreenMaxY
+  );
+  
+  if (gridPosition) {
+    return gridPosition;
   }
   
-  // If we couldn't find a random position, use a grid-based fallback
-  return findGridPosition(existingPositions, containerWidth);
+  // If no space in current screen, extend below
+  const extendedMaxY = containerHeight - VIEWPORT_PADDING;
+  return findGridPositionInArea(
+    existingPositions,
+    containerWidth,
+    currentScreenMaxY,
+    extendedMaxY
+  ) || findGridPositionInArea(existingPositions, containerWidth, minY, extendedMaxY);
 };
 
-const findGridPosition = (
+const findGridPositionInArea = (
   existingPositions: Position[],
-  containerWidth: number
-): Position => {
+  containerWidth: number,
+  startY: number,
+  maxY: number
+): Position | null => {
   const cols = Math.floor((containerWidth - VIEWPORT_PADDING * 2) / (NOTE_WIDTH + MIN_SPACING));
   const startX = VIEWPORT_PADDING;
-  const startY = HERO_SECTION_HEIGHT + VIEWPORT_PADDING; // Start below hero section
   
   let row = 0;
-  let col = 0;
   
   while (true) {
-    const x = startX + col * (NOTE_WIDTH + MIN_SPACING);
     const y = startY + row * (NOTE_HEIGHT + MIN_SPACING);
     
-    const gridPosition = { x, y };
-    
-    if (!checkCollision(gridPosition, existingPositions)) {
-      return gridPosition;
+    // If we've exceeded the allowed area, return null
+    if (y + NOTE_HEIGHT > maxY) {
+      return null;
     }
     
-    col++;
-    if (col >= cols) {
-      col = 0;
-      row++;
+    for (let col = 0; col < cols; col++) {
+      const x = startX + col * (NOTE_WIDTH + MIN_SPACING);
+      const gridPosition = { x, y };
+      
+      if (!checkCollision(gridPosition, existingPositions)) {
+        return gridPosition;
+      }
     }
+    
+    row++;
   }
 };
 
@@ -107,8 +115,10 @@ export const calculateRequiredHeight = (positions: Position[]): number => {
   const maxY = Math.max(...positions.map(pos => pos.y));
   const requiredHeight = maxY + NOTE_HEIGHT + VIEWPORT_PADDING;
   
-  // Ensure minimum height includes hero section
-  return Math.max(requiredHeight, HERO_SECTION_HEIGHT + window.innerHeight * 0.5);
+  // Only extend beyond current screen if notes actually need the space
+  const minRequiredHeight = Math.max(requiredHeight, window.innerHeight);
+  
+  return minRequiredHeight;
 };
 
 // Convert pixel positions to percentage for CSS
