@@ -11,15 +11,23 @@ const Index = () => {
   const [colorIndex, setColorIndex] = useState(0);
   
   const generateNonOverlappingPosition = (existingNotes: StickyNoteType[]) => {
-    const noteWidth = 12; // Approximate width in percentage (192px / 1600px)
-    const noteHeight = 12; // Approximate height in percentage (192px / 900px)
-    const minDistance = 14; // Increased for better spacing
-    const maxAttempts = 100;
+    const noteWidth = 16; // Increased to account for actual note size + rotation
+    const noteHeight = 16; // Increased to account for actual note size + rotation
+    const minDistance = 20; // Significantly increased to prevent any overlap
+    const maxAttempts = 200;
+    
+    // Define available area (below button, above social icons)
+    const availableArea = {
+      minX: 5,
+      maxX: 85,
+      minY: 35, // Below "Leave a Note" button
+      maxY: 70  // Above social icons
+    };
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const position = {
-        x: Math.random() * (88 - noteWidth) + 6, // Keep within 6% to 88% range
-        y: Math.random() * (45 - noteHeight) + 35 // Start from 35% (below button) to 80%
+        x: Math.random() * (availableArea.maxX - availableArea.minX - noteWidth) + availableArea.minX,
+        y: Math.random() * (availableArea.maxY - availableArea.minY - noteHeight) + availableArea.minY
       };
       
       // Check if this position conflicts with existing notes
@@ -36,33 +44,23 @@ const Index = () => {
       }
     }
     
-    // Fallback: use a grid-based approach with better spacing
-    const gridCols = 6;
-    const gridRows = 3;
-    const startY = 35; // Start below the button
-    const endY = 75; // End before social icons
-    const usedPositions = new Set(
-      existingNotes.map(note => 
-        `${Math.floor((note.position.x - 6) / (82 / gridCols))}-${Math.floor((note.position.y - startY) / ((endY - startY) / gridRows))}`
-      )
-    );
+    // Fallback: use a spiral pattern to guarantee no overlap
+    const spiralRadius = 25;
+    const angleStep = 0.8;
+    const radiusGrowth = 1.5;
     
-    for (let row = 0; row < gridRows; row++) {
-      for (let col = 0; col < gridCols; col++) {
-        const gridKey = `${col}-${row}`;
-        if (!usedPositions.has(gridKey)) {
-          return {
-            x: (col * (82 / gridCols)) + Math.random() * 2 + 6,
-            y: startY + (row * ((endY - startY) / gridRows)) + Math.random() * 2
-          };
-        }
-      }
-    }
+    const noteIndex = existingNotes.length;
+    const angle = noteIndex * angleStep;
+    const radius = Math.sqrt(noteIndex) * radiusGrowth * spiralRadius;
     
-    // Final fallback - ensure it's always below the button with good spacing
+    const centerX = 45; // Center of available area
+    const centerY = 52; // Center of available area
+    
     return {
-      x: (existingNotes.length % 6) * 14 + 6,
-      y: Math.floor(existingNotes.length / 6) * 15 + 35
+      x: Math.max(availableArea.minX, Math.min(availableArea.maxX - noteWidth, 
+        centerX + Math.cos(angle) * radius)),
+      y: Math.max(availableArea.minY, Math.min(availableArea.maxY - noteHeight, 
+        centerY + Math.sin(angle) * radius))
     };
   };
   
