@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { Pin } from "lucide-react";
 import { StickyNote as StickyNoteType } from "@/types/StickyNote";
 
 interface StickyNoteProps {
@@ -30,17 +29,11 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
         className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative"
         style={{ backgroundColor: note.color }}
       >
-        {/* Pin in the center */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-          <Pin 
-            size={16} 
-            className="text-red-600 drop-shadow-sm rotate-12" 
-            fill="currentColor"
-          />
-        </div>
+        {/* Tape effect */}
+        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-12 h-4 bg-white/40 rounded-sm border border-white/20"></div>
         
         {/* Message */}
-        <div className="h-full flex flex-col justify-between text-amber-900 pt-6">
+        <div className="h-full flex flex-col justify-between text-amber-900">
           <p className="text-sm leading-relaxed break-words overflow-hidden font-handwritten">
             {note.message}
           </p>

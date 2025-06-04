@@ -20,12 +20,12 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
   };
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="relative w-full">
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       
       {/* Notes container */}
-      <div className="relative w-full h-full">
+      <div className="relative w-full">
         {notes.map((note) => (
           <StickyNote
             key={note.id}

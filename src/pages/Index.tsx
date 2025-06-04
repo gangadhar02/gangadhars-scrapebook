@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -10,57 +11,19 @@ const Index = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
   
-  const generateNonOverlappingPosition = (existingNotes: StickyNoteType[]) => {
-    const noteWidth = 16; // Increased to account for actual note size + rotation
-    const noteHeight = 16; // Increased to account for actual note size + rotation
-    const minDistance = 20; // Significantly increased to prevent any overlap
-    const maxAttempts = 200;
+  const generateGridPosition = (noteIndex: number) => {
+    const notesPerRow = 4; // Number of notes per row
+    const noteSpacing = 20; // Spacing between notes in percentage
+    const startX = 10; // Starting X position
+    const startY = 35; // Starting Y position (below button)
+    const rowHeight = 25; // Height between rows
     
-    // Define available area (below button, above social icons)
-    const availableArea = {
-      minX: 5,
-      maxX: 85,
-      minY: 35, // Below "Leave a Note" button
-      maxY: 70  // Above social icons
-    };
-    
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      const position = {
-        x: Math.random() * (availableArea.maxX - availableArea.minX - noteWidth) + availableArea.minX,
-        y: Math.random() * (availableArea.maxY - availableArea.minY - noteHeight) + availableArea.minY
-      };
-      
-      // Check if this position conflicts with existing notes
-      const hasConflict = existingNotes.some(note => {
-        const distance = Math.sqrt(
-          Math.pow(position.x - note.position.x, 2) + 
-          Math.pow(position.y - note.position.y, 2)
-        );
-        return distance < minDistance;
-      });
-      
-      if (!hasConflict) {
-        return position;
-      }
-    }
-    
-    // Fallback: use a spiral pattern to guarantee no overlap
-    const spiralRadius = 25;
-    const angleStep = 0.8;
-    const radiusGrowth = 1.5;
-    
-    const noteIndex = existingNotes.length;
-    const angle = noteIndex * angleStep;
-    const radius = Math.sqrt(noteIndex) * radiusGrowth * spiralRadius;
-    
-    const centerX = 45; // Center of available area
-    const centerY = 52; // Center of available area
+    const row = Math.floor(noteIndex / notesPerRow);
+    const col = noteIndex % notesPerRow;
     
     return {
-      x: Math.max(availableArea.minX, Math.min(availableArea.maxX - noteWidth, 
-        centerX + Math.cos(angle) * radius)),
-      y: Math.max(availableArea.minY, Math.min(availableArea.maxY - noteHeight, 
-        centerY + Math.sin(angle) * radius))
+      x: startX + (col * noteSpacing),
+      y: startY + (row * rowHeight)
     };
   };
   
@@ -68,7 +31,7 @@ const Index = () => {
     message: string;
     authorName?: string;
   }) => {
-    const position = generateNonOverlappingPosition(notes);
+    const position = generateGridPosition(notes.length);
     
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
@@ -91,9 +54,20 @@ const Index = () => {
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
+
+  // Calculate dynamic height based on number of notes
+  const calculateMinHeight = () => {
+    if (notes.length === 0) return "100vh";
+    const rows = Math.ceil(notes.length / 4);
+    const minHeight = 500 + (rows * 250); // Base height + rows * approximate note height
+    return `${Math.max(minHeight, window.innerHeight)}px`;
+  };
   
   return (
-    <div className="min-h-screen relative overflow-hidden paper-texture">
+    <div 
+      className="relative overflow-auto paper-texture"
+      style={{ minHeight: calculateMinHeight() }}
+    >
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
         <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
@@ -134,8 +108,10 @@ const Index = () => {
         </div>
       )}
 
-      {/* Social Media Icons */}
-      <SocialIcons />
+      {/* Social Media Icons - positioned at bottom */}
+      <div className="relative z-10 mt-8">
+        <SocialIcons />
+      </div>
     </div>
   );
 };
