@@ -19,51 +19,35 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
     });
   };
 
-  // Grid-based positioning to prevent overlapping
-  const getGridPosition = (index: number) => {
-    const columns = 4; // Number of columns in the grid
-    const rows = Math.ceil(notes.length / columns);
-    
-    const col = index % columns;
-    const row = Math.floor(index / columns);
-    
-    // Calculate position with some spacing and random offset within the cell
-    const cellWidth = 100 / columns;
-    const cellHeight = 100 / Math.max(rows, 3); // Minimum 3 rows for better spacing
-    
-    const baseX = col * cellWidth + cellWidth * 0.1; // 10% padding from cell edge
-    const baseY = row * cellHeight + cellHeight * 0.1;
-    
-    // Add small random offset within the cell for natural look
-    const randomOffsetX = Math.random() * (cellWidth * 0.3);
-    const randomOffsetY = Math.random() * (cellHeight * 0.3);
-    
-    return {
-      x: Math.min(baseX + randomOffsetX, 100 - 20), // Ensure note doesn't go off screen
-      y: Math.min(baseY + randomOffsetY, 100 - 25)
-    };
-  };
-
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       
-      {/* Notes container - Desktop only */}
-      <div className="relative w-full h-full">
-        {notes.map((note, index) => {
-          const gridPosition = getGridPosition(index);
-          return (
-            <StickyNote
+      {/* Desktop Notes container - 2 column grid */}
+      <div className="relative w-full h-full px-8 py-4">
+        <div className="grid grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {notes.map((note, index) => (
+            <div
               key={note.id}
-              note={{
-                ...note,
-                position: gridPosition
+              className="flex justify-center items-start py-4"
+              style={{
+                transform: `rotate(${(index % 4 === 0 || index % 4 === 3) ? 
+                  Math.random() * 4 - 2 : 
+                  Math.random() * 4 - 2}deg)`
               }}
-              onClick={() => handleNoteClick(note)}
-            />
-          );
-        })}
+            >
+              <StickyNote
+                note={{
+                  ...note,
+                  position: { x: 0, y: 0 },
+                  rotation: 0
+                }}
+                onClick={() => handleNoteClick(note)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Subtle grid overlay for authenticity */}
