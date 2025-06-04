@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -52,16 +51,6 @@ const Index = () => {
         <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto mb-6">
           Share your thoughts, memories, and messages on this virtual wall of memories.
         </p>
-        
-        {/* Hero Section Leave a Note Button */}
-        {!isCreating && (
-          <button
-            onClick={handleStartCreating}
-            className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 border-2 border-amber-200"
-          >
-            📝 Leave a Note
-          </button>
-        )}
       </header>
 
       {/* Notes Wall Background */}
