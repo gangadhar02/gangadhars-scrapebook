@@ -22,6 +22,7 @@ const NOTE_WIDTH = 192; // 48 * 4 (w-48 in pixels)
 const NOTE_HEIGHT = 192; // 48 * 4 (h-48 in pixels)
 const MIN_SPACING = 20; // Minimum space between notes
 const VIEWPORT_PADDING = 50; // Padding from viewport edges
+const HERO_SECTION_HEIGHT = 400; // Height of hero section to position notes below
 
 export const checkCollision = (
   newPos: Position,
@@ -49,13 +50,14 @@ export const findAvailablePosition = (
   const maxAttempts = 100;
   let attempts = 0;
   
-  // Calculate usable area (accounting for note size and padding)
+  // Calculate usable area starting below hero section
+  const minY = HERO_SECTION_HEIGHT + VIEWPORT_PADDING;
   const usableWidth = containerWidth - NOTE_WIDTH - (VIEWPORT_PADDING * 2);
-  const usableHeight = containerHeight - NOTE_HEIGHT - (VIEWPORT_PADDING * 2);
+  const usableHeight = containerHeight - NOTE_HEIGHT - minY - VIEWPORT_PADDING;
   
   while (attempts < maxAttempts) {
     const x = VIEWPORT_PADDING + Math.random() * usableWidth;
-    const y = VIEWPORT_PADDING + Math.random() * usableHeight;
+    const y = minY + Math.random() * Math.max(usableHeight, NOTE_HEIGHT);
     
     const newPosition = { x, y };
     
@@ -76,7 +78,7 @@ const findGridPosition = (
 ): Position => {
   const cols = Math.floor((containerWidth - VIEWPORT_PADDING * 2) / (NOTE_WIDTH + MIN_SPACING));
   const startX = VIEWPORT_PADDING;
-  const startY = VIEWPORT_PADDING;
+  const startY = HERO_SECTION_HEIGHT + VIEWPORT_PADDING; // Start below hero section
   
   let row = 0;
   let col = 0;
@@ -105,7 +107,8 @@ export const calculateRequiredHeight = (positions: Position[]): number => {
   const maxY = Math.max(...positions.map(pos => pos.y));
   const requiredHeight = maxY + NOTE_HEIGHT + VIEWPORT_PADDING;
   
-  return Math.max(requiredHeight, window.innerHeight);
+  // Ensure minimum height includes hero section
+  return Math.max(requiredHeight, HERO_SECTION_HEIGHT + window.innerHeight * 0.5);
 };
 
 // Convert pixel positions to percentage for CSS
