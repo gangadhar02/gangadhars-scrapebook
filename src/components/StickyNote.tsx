@@ -26,15 +26,15 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
       onClick={onClick}
     >
       <div
-        className="w-36 h-36 md:w-48 md:h-48 p-3 md:p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative"
+        className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative"
         style={{ backgroundColor: note.color }}
       >
         {/* Tape effect */}
-        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-3 md:w-12 md:h-4 bg-white/40 rounded-sm border border-white/20"></div>
+        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-12 h-4 bg-white/40 rounded-sm border border-white/20"></div>
         
         {/* Message */}
         <div className="h-full flex flex-col justify-between text-amber-900">
-          <p className="text-xs md:text-sm leading-relaxed break-words overflow-hidden font-handwritten">
+          <p className="text-sm leading-relaxed break-words overflow-hidden font-handwritten">
             {note.message}
           </p>
           
@@ -47,7 +47,7 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
         </div>
 
         {/* Corner fold effect */}
-        <div className="absolute top-0 right-0 w-3 h-3 md:w-4 md:h-4 bg-white/20 transform rotate-45 translate-x-2 -translate-y-2 rounded-sm"></div>
+        <div className="absolute top-0 right-0 w-4 h-4 bg-white/20 transform rotate-45 translate-x-2 -translate-y-2 rounded-sm"></div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
 import { SocialIcons } from "@/components/SocialIcons";
@@ -9,101 +9,60 @@ const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // Check if screen is mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  const generateGridPosition = (noteIndex: number) => {
-    const notesPerRow = isMobile ? 2 : 5; // 2 notes per row on mobile, 5 on desktop
-    const noteSpacing = isMobile ? 40 : 18; // More spacing on mobile
-    const startX = isMobile ? 10 : 8; // Adjusted starting position for mobile
-    const startY = 35; // Starting Y position (below button)
-    const rowHeight = isMobile ? 30 : 25; // More row height on mobile
-    
-    // Calculate row and column for this note
-    const row = Math.floor(noteIndex / notesPerRow);
-    const col = noteIndex % notesPerRow;
-    
-    return {
-      x: startX + (col * noteSpacing),
-      y: startY + (row * rowHeight)
-    };
-  };
-  
   const handleNoteComplete = (noteData: {
     message: string;
     authorName?: string;
   }) => {
-    const position = generateGridPosition(notes.length);
-    
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
       message: noteData.message,
       color: STICKY_NOTE_COLORS[colorIndex],
       authorName: noteData.authorName,
-      position,
-      rotation: Math.random() * 20 - 10, // Random rotation between -10 and 10 degrees
+      position: {
+        x: Math.random() * 70 + 10,
+        // Random position between 10% and 80%
+        y: Math.random() * 60 + 20 // Random position between 20% and 80%
+      },
+      rotation: Math.random() * 20 - 10,
+      // Random rotation between -10 and 10 degrees
       createdAt: new Date()
     };
     setNotes(prevNotes => [...prevNotes, newNote]);
     setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
     setIsCreating(false);
   };
-  
   const handleStartCreating = () => {
     setIsCreating(true);
   };
-  
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
-
-  // Calculate dynamic height based on number of notes
-  const calculateMinHeight = () => {
-    if (notes.length === 0) return "100vh";
-    const notesPerRow = isMobile ? 2 : 5;
-    const rows = Math.ceil(notes.length / notesPerRow);
-    const minHeight = 500 + (rows * (isMobile ? 300 : 250)); // More height per row on mobile
-    return `${Math.max(minHeight, window.innerHeight)}px`;
-  };
-  
   return (
-    <div 
-      className="relative overflow-auto paper-texture"
-      style={{ minHeight: calculateMinHeight() }}
-    >
+    <div className="min-h-screen relative overflow-hidden paper-texture">
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
         <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
           Gangadhar's Scrapebook
         </h1>
-        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto mb-6">
+        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">
           Share your thoughts, memories, and messages on this virtual wall of memories.
         </p>
-        
-        {/* Hero Section Leave a Note Button */}
-        {!isCreating && (
-          <button
-            onClick={handleStartCreating}
-            className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 border-2 border-amber-200"
-          >
-            📝 Leave a Note
-          </button>
-        )}
       </header>
 
       {/* Notes Wall Background */}
       <NotesWall notes={notes} />
+
+      {/* Floating Action Button */}
+      {!isCreating && (
+        <div className="fixed bottom-8 right-8 z-20">
+          <button
+            onClick={handleStartCreating}
+            className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 animate-pulse-glow border-2 border-amber-200"
+          >
+            📝 Leave a Note
+          </button>
+        </div>
+      )}
 
       {/* Note Creator */}
       {isCreating && (
@@ -122,10 +81,8 @@ const Index = () => {
         </div>
       )}
 
-      {/* Social Media Icons - positioned at bottom */}
-      <div className="relative z-10 mt-8">
-        <SocialIcons />
-      </div>
+      {/* Social Media Icons */}
+      <SocialIcons />
     </div>
   );
 };
