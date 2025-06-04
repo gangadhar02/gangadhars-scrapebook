@@ -10,6 +10,8 @@ interface StickyNoteProps {
 export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  console.log('StickyNote rendering:', note.id, 'Position:', note.position, 'Color:', note.color);
+
   return (
     <div
       className={`absolute cursor-pointer transform transition-all duration-200 ${

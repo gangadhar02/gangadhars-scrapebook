@@ -8,6 +8,8 @@ interface NotesWallProps {
 }
 
 export const NotesWall = ({ notes }: NotesWallProps) => {
+  console.log('NotesWall rendering with notes:', notes.length);
+  
   const handleNoteClick = (note: StickyNoteType) => {
     const message = note.authorName 
       ? `"${note.message}" - ${note.authorName}`
@@ -26,13 +28,16 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
       
       {/* Notes container */}
       <div className="relative w-full h-full">
-        {notes.map((note) => (
-          <StickyNote
-            key={note.id}
-            note={note}
-            onClick={() => handleNoteClick(note)}
-          />
-        ))}
+        {notes.map((note) => {
+          console.log('Rendering note:', note.id, 'at position:', note.position);
+          return (
+            <StickyNote
+              key={note.id}
+              note={note}
+              onClick={() => handleNoteClick(note)}
+            />
+          );
+        })}
       </div>
 
       {/* Subtle grid overlay for authenticity */}

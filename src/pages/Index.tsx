@@ -16,6 +16,7 @@ const Index = () => {
 
   // Update container height only when notes actually need more space
   useEffect(() => {
+    console.log('Notes updated:', notes.length);
     if (notes.length > 0) {
       // Convert percentage positions back to pixels for calculation
       const pixelPositions = notes.map(note => ({
@@ -24,6 +25,7 @@ const Index = () => {
       }));
       
       const requiredHeight = calculateRequiredHeight(pixelPositions);
+      console.log('Required height:', requiredHeight, 'Current height:', containerHeight);
       // Only update if we actually need more height
       if (requiredHeight > containerHeight) {
         setContainerHeight(requiredHeight);
@@ -35,6 +37,7 @@ const Index = () => {
     message: string;
     authorName?: string;
   }) => {
+    console.log('Creating note with data:', noteData);
     const containerWidth = window.innerWidth;
     
     // Get existing positions in pixels
@@ -50,12 +53,16 @@ const Index = () => {
       containerHeight
     );
 
+    console.log('Pixel position found:', pixelPosition);
+
     // Convert to percentage for storage
     const percentagePosition = positionToPercentage(
       pixelPosition,
       containerWidth,
       containerHeight
     );
+
+    console.log('Percentage position:', percentagePosition);
 
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
@@ -66,6 +73,8 @@ const Index = () => {
       rotation: Math.random() * 20 - 10, // Random rotation between -10 and 10 degrees
       createdAt: new Date()
     };
+
+    console.log('New note created:', newNote);
 
     setNotes(prevNotes => [...prevNotes, newNote]);
     setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
@@ -105,8 +114,8 @@ const Index = () => {
         )}
       </header>
 
-      {/* Notes Wall Background - positioned below hero */}
-      <div className="absolute inset-0 w-full h-full" style={{ top: '384px' }}>
+      {/* Notes Wall Background - Full screen overlay */}
+      <div className="absolute inset-0 w-full h-full overflow-visible">
         <NotesWall notes={notes} />
       </div>
 
