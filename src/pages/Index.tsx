@@ -9,33 +9,21 @@ const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
-  const [availableRows, setAvailableRows] = useState(2); // Start with 2 rows
   
   const generateGridPosition = (noteIndex: number) => {
-    const notesPerRow = 5; // Updated to 5 notes per row
-    const noteSpacing = 18; // Adjusted spacing for 5 notes
-    const startX = 8; // Adjusted starting X position
+    const notesPerRow = 5; // 5 notes per row
+    const noteSpacing = 18; // Spacing between notes in percentage
+    const startX = 8; // Starting X position
     const startY = 35; // Starting Y position (below button)
     const rowHeight = 25; // Height between rows
     
-    // For the first 10 notes (2 rows), use sequential positioning
-    if (noteIndex < availableRows * notesPerRow) {
-      const row = Math.floor(noteIndex / notesPerRow);
-      const col = noteIndex % notesPerRow;
-      
-      return {
-        x: startX + (col * noteSpacing),
-        y: startY + (row * rowHeight)
-      };
-    }
-    
-    // After first 10 notes, place randomly in available rows
-    const randomRow = Math.floor(Math.random() * availableRows);
-    const randomCol = Math.floor(Math.random() * notesPerRow);
+    // Calculate row and column for this note
+    const row = Math.floor(noteIndex / notesPerRow);
+    const col = noteIndex % notesPerRow;
     
     return {
-      x: startX + (randomCol * noteSpacing) + (Math.random() * 3 - 1.5), // Add slight randomness
-      y: startY + (randomRow * rowHeight) + (Math.random() * 3 - 1.5) // Add slight randomness
+      x: startX + (col * noteSpacing),
+      y: startY + (row * rowHeight)
     };
   };
   
@@ -44,14 +32,6 @@ const Index = () => {
     authorName?: string;
   }) => {
     const position = generateGridPosition(notes.length);
-    
-    // Check if we need to add more rows (when we have filled current rows)
-    const notesPerRow = 5;
-    const currentMaxNotes = availableRows * notesPerRow;
-    
-    if (notes.length >= currentMaxNotes - 1) {
-      setAvailableRows(prev => prev + 2); // Add 2 more rows
-    }
     
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
@@ -75,10 +55,11 @@ const Index = () => {
     setIsCreating(false);
   };
 
-  // Calculate dynamic height based on number of available rows
+  // Calculate dynamic height based on number of notes
   const calculateMinHeight = () => {
     if (notes.length === 0) return "100vh";
-    const minHeight = 500 + (availableRows * 250); // Base height + rows * approximate note height
+    const rows = Math.ceil(notes.length / 5);
+    const minHeight = 500 + (rows * 250); // Base height + rows * approximate note height
     return `${Math.max(minHeight, window.innerHeight)}px`;
   };
   
