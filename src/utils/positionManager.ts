@@ -22,6 +22,7 @@ const NOTE_WIDTH = 192; // 48 * 4 (w-48 in pixels)
 const NOTE_HEIGHT = 192; // 48 * 4 (h-48 in pixels)
 const MIN_SPACING = 20; // Minimum space between notes
 const VIEWPORT_PADDING = 50; // Padding from viewport edges
+const HEADER_HEIGHT = 300; // Approximate height of header section with title, subtitle, and button
 
 export const checkCollision = (
   newPos: Position,
@@ -49,13 +50,14 @@ export const findAvailablePosition = (
   const maxAttempts = 100;
   let attempts = 0;
   
-  // Calculate usable area (accounting for note size and padding)
+  // Calculate usable area (accounting for note size, padding, and header)
   const usableWidth = containerWidth - NOTE_WIDTH - (VIEWPORT_PADDING * 2);
-  const usableHeight = containerHeight - NOTE_HEIGHT - (VIEWPORT_PADDING * 2);
+  const startY = HEADER_HEIGHT; // Start below the header
+  const usableHeight = containerHeight - NOTE_HEIGHT - HEADER_HEIGHT - VIEWPORT_PADDING;
   
   while (attempts < maxAttempts) {
     const x = VIEWPORT_PADDING + Math.random() * usableWidth;
-    const y = VIEWPORT_PADDING + Math.random() * usableHeight;
+    const y = startY + Math.random() * usableHeight;
     
     const newPosition = { x, y };
     
@@ -76,7 +78,7 @@ const findGridPosition = (
 ): Position => {
   const cols = Math.floor((containerWidth - VIEWPORT_PADDING * 2) / (NOTE_WIDTH + MIN_SPACING));
   const startX = VIEWPORT_PADDING;
-  const startY = VIEWPORT_PADDING;
+  const startY = HEADER_HEIGHT; // Start below the header
   
   let row = 0;
   let col = 0;
