@@ -72,6 +72,7 @@ export const NoteCreator = ({ onComplete, onCancel }: NoteCreatorProps) => {
               placeholder="Your name (optional)"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value.slice(0, 30))}
+              onKeyDown={handleKeyDown}
               className="border-amber-300 bg-white/50 font-handwritten text-amber-900 placeholder:text-amber-600/70 focus:ring-amber-400"
             />
           </div>
