@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -9,6 +10,7 @@ const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  
   const handleNoteComplete = (noteData: {
     message: string;
     authorName?: string;
@@ -31,12 +33,15 @@ const Index = () => {
     setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
     setIsCreating(false);
   };
+  
   const handleStartCreating = () => {
     setIsCreating(true);
   };
+  
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
+  
   return (
     <div className="min-h-screen relative overflow-hidden paper-texture">
       {/* Header */}
@@ -44,9 +49,19 @@ const Index = () => {
         <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
           Gangadhar's Scrapebook
         </h1>
-        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto mb-6">
           Share your thoughts, memories, and messages on this virtual wall of memories.
         </p>
+        
+        {/* Hero Section Leave a Note Button */}
+        {!isCreating && (
+          <button
+            onClick={handleStartCreating}
+            className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 border-2 border-amber-200"
+          >
+            📝 Leave a Note
+          </button>
+        )}
       </header>
 
       {/* Notes Wall Background */}
