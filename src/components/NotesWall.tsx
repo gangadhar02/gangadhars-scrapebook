@@ -24,44 +24,15 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       
-      {/* Notes container - responsive layout */}
+      {/* Notes container - Desktop only */}
       <div className="relative w-full h-full">
-        {/* Desktop: Random positioning */}
-        <div className="hidden md:block relative w-full h-full">
-          {notes.map((note) => (
-            <StickyNote
-              key={note.id}
-              note={note}
-              onClick={() => handleNoteClick(note)}
-            />
-          ))}
-        </div>
-
-        {/* Mobile: Vertical stacking - starts after header */}
-        <div className="md:hidden relative w-full h-full pt-48 overflow-y-auto">
-          <div className="px-4 py-8">
-            <div className="space-y-6 max-w-xs mx-auto pb-32">
-              {notes.map((note, index) => (
-                <div
-                  key={note.id}
-                  className="relative w-full flex justify-center"
-                  style={{
-                    transform: `rotate(${(index % 2 === 0 ? 1 : -1) * (Math.random() * 3 + 1)}deg)`,
-                  }}
-                >
-                  <StickyNote
-                    note={{
-                      ...note,
-                      position: { x: 0, y: 0 },
-                      rotation: 0
-                    }}
-                    onClick={() => handleNoteClick(note)}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        {notes.map((note) => (
+          <StickyNote
+            key={note.id}
+            note={note}
+            onClick={() => handleNoteClick(note)}
+          />
+        ))}
       </div>
 
       {/* Subtle grid overlay for authenticity */}
