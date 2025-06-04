@@ -11,22 +11,73 @@ const Index = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
   
+  const generateNonOverlappingPosition = (existingNotes: StickyNoteType[]) => {
+    const noteWidth = 12; // Approximate width in percentage (192px / 1600px)
+    const noteHeight = 12; // Approximate height in percentage (192px / 900px)
+    const minDistance = 8; // Minimum distance between note centers
+    const maxAttempts = 50;
+    
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const position = {
+        x: Math.random() * (85 - noteWidth) + 5, // Keep within 5% to 85% range
+        y: Math.random() * (70 - noteHeight) + 15 // Keep within 15% to 85% range
+      };
+      
+      // Check if this position conflicts with existing notes
+      const hasConflict = existingNotes.some(note => {
+        const distance = Math.sqrt(
+          Math.pow(position.x - note.position.x, 2) + 
+          Math.pow(position.y - note.position.y, 2)
+        );
+        return distance < minDistance;
+      });
+      
+      if (!hasConflict) {
+        return position;
+      }
+    }
+    
+    // Fallback: if we can't find a non-overlapping position, use a grid-based approach
+    const gridCols = 6;
+    const gridRows = 4;
+    const usedPositions = new Set(
+      existingNotes.map(note => 
+        `${Math.floor(note.position.x / (100 / gridCols))}-${Math.floor(note.position.y / (100 / gridRows))}`
+      )
+    );
+    
+    for (let row = 0; row < gridRows; row++) {
+      for (let col = 0; col < gridCols; col++) {
+        const gridKey = `${col}-${row}`;
+        if (!usedPositions.has(gridKey)) {
+          return {
+            x: (col * (100 / gridCols)) + Math.random() * 5 + 5,
+            y: (row * (100 / gridRows)) + Math.random() * 5 + 20
+          };
+        }
+      }
+    }
+    
+    // Final fallback
+    return {
+      x: Math.random() * 70 + 10,
+      y: Math.random() * 60 + 20
+    };
+  };
+  
   const handleNoteComplete = (noteData: {
     message: string;
     authorName?: string;
   }) => {
+    const position = generateNonOverlappingPosition(notes);
+    
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
       message: noteData.message,
       color: STICKY_NOTE_COLORS[colorIndex],
       authorName: noteData.authorName,
-      position: {
-        x: Math.random() * 70 + 10,
-        // Random position between 10% and 80%
-        y: Math.random() * 60 + 20 // Random position between 20% and 80%
-      },
-      rotation: Math.random() * 20 - 10,
-      // Random rotation between -10 and 10 degrees
+      position,
+      rotation: Math.random() * 20 - 10, // Random rotation between -10 and 10 degrees
       createdAt: new Date()
     };
     setNotes(prevNotes => [...prevNotes, newNote]);
