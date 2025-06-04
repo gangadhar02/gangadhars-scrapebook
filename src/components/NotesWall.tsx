@@ -37,12 +37,8 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
           ))}
         </div>
 
-        {/* Mobile: Vertical stacking with proper positioning */}
-        <div className="md:hidden absolute top-0 left-0 right-0 bottom-0 overflow-y-auto">
-          {/* Spacer to push content below header */}
-          <div className="h-64"></div>
-          
-          {/* Notes container */}
+        {/* Mobile: Vertical stacking - starts after header */}
+        <div className="md:hidden relative w-full h-full pt-48 overflow-y-auto">
           <div className="px-4 py-8">
             <div className="space-y-6 max-w-xs mx-auto pb-32">
               {notes.map((note, index) => (
