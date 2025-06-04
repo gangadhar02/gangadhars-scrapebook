@@ -3,10 +3,12 @@ import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
 import { StickyNote as StickyNoteType } from "@/types/StickyNote";
 import { STICKY_NOTE_COLORS } from "@/types/StickyNote";
+
 const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+
   const handleNoteComplete = (noteData: {
     message: string;
     authorName?: string;
@@ -29,16 +31,19 @@ const Index = () => {
     setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
     setIsCreating(false);
   };
+
   const handleStartCreating = () => {
     setIsCreating(true);
   };
+
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
+
   return <div className="min-h-screen relative overflow-hidden paper-texture">
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
-        <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">Gangadhar's Scrapebook</h1>
+        <h1 className="text-4xl md:text-6xl font-childhood text-sky-600 mb-4 drop-shadow-lg">Gangadhar's Scrapebook</h1>
         <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">Share your thoughts, memories, and messages on this virtual wall of memories.</p>
       </header>
 
@@ -66,4 +71,5 @@ const Index = () => {
         </div>}
     </div>;
 };
+
 export default Index;
