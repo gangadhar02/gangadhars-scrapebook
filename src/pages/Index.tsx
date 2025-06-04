@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -14,13 +13,13 @@ const Index = () => {
   const generateNonOverlappingPosition = (existingNotes: StickyNoteType[]) => {
     const noteWidth = 12; // Approximate width in percentage (192px / 1600px)
     const noteHeight = 12; // Approximate height in percentage (192px / 900px)
-    const minDistance = 8; // Minimum distance between note centers
-    const maxAttempts = 50;
+    const minDistance = 6; // Reduced for slight edge overlapping
+    const maxAttempts = 100;
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const position = {
-        x: Math.random() * (85 - noteWidth) + 5, // Keep within 5% to 85% range
-        y: Math.random() * (70 - noteHeight) + 15 // Keep within 15% to 85% range
+        x: Math.random() * (88 - noteWidth) + 6, // Keep within 6% to 88% range
+        y: Math.random() * (45 - noteHeight) + 35 // Start from 35% (below button) to 80%
       };
       
       // Check if this position conflicts with existing notes
@@ -37,12 +36,14 @@ const Index = () => {
       }
     }
     
-    // Fallback: if we can't find a non-overlapping position, use a grid-based approach
-    const gridCols = 6;
-    const gridRows = 4;
+    // Fallback: use a more relaxed grid-based approach with slight randomness
+    const gridCols = 7;
+    const gridRows = 3;
+    const startY = 35; // Start below the button
+    const endY = 75; // End before social icons
     const usedPositions = new Set(
       existingNotes.map(note => 
-        `${Math.floor(note.position.x / (100 / gridCols))}-${Math.floor(note.position.y / (100 / gridRows))}`
+        `${Math.floor((note.position.x - 6) / (82 / gridCols))}-${Math.floor((note.position.y - startY) / ((endY - startY) / gridRows))}`
       )
     );
     
@@ -51,17 +52,17 @@ const Index = () => {
         const gridKey = `${col}-${row}`;
         if (!usedPositions.has(gridKey)) {
           return {
-            x: (col * (100 / gridCols)) + Math.random() * 5 + 5,
-            y: (row * (100 / gridRows)) + Math.random() * 5 + 20
+            x: (col * (82 / gridCols)) + Math.random() * 4 + 6,
+            y: startY + (row * ((endY - startY) / gridRows)) + Math.random() * 3
           };
         }
       }
     }
     
-    // Final fallback
+    // Final fallback - ensure it's always below the button
     return {
       x: Math.random() * 70 + 10,
-      y: Math.random() * 60 + 20
+      y: Math.random() * 40 + 35 // Always start from 35% (below button)
     };
   };
   
