@@ -38,14 +38,14 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
         </div>
 
         {/* Mobile: Vertical stacking */}
-        <div className="md:hidden overflow-y-auto h-full px-4 py-20">
-          <div className="space-y-6 max-w-sm mx-auto">
+        <div className="md:hidden overflow-y-auto h-full px-4 py-4 pt-32">
+          <div className="space-y-4 max-w-xs mx-auto pb-24">
             {notes.map((note, index) => (
               <div
                 key={note.id}
-                className="relative"
+                className="relative w-full flex justify-center"
                 style={{
-                  transform: `rotate(${(index % 2 === 0 ? 1 : -1) * Math.random() * 3}deg)`,
+                  transform: `rotate(${(index % 2 === 0 ? 1 : -1) * (Math.random() * 2 + 1)}deg)`,
                 }}
               >
                 <StickyNote

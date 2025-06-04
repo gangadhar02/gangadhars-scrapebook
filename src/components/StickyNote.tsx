@@ -26,7 +26,7 @@ export const StickyNote = ({ note, onClick }: StickyNoteProps) => {
       onClick={onClick}
     >
       <div
-        className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative mx-auto md:mx-0"
+        className="w-48 h-48 p-4 sticky-note-shadow rounded-lg border-l-2 border-t-2 border-white/30 relative"
         style={{ backgroundColor: note.color }}
       >
         {/* Tape effect */}
