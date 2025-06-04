@@ -6,6 +6,7 @@ import { SocialIcons } from "@/components/SocialIcons";
 import { StickyNote as StickyNoteType } from "@/types/StickyNote";
 import { STICKY_NOTE_COLORS } from "@/types/StickyNote";
 import { findAvailablePosition, calculateRequiredHeight, positionToPercentage } from "@/utils/positionManager";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
@@ -86,25 +87,23 @@ const Index = () => {
         <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
           Gangadhar's Scrapebook
         </h1>
-        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto mb-6">
           Share your thoughts, memories, and messages on this virtual wall of memories.
         </p>
-      </header>
-
-      {/* Notes Wall Background */}
-      <NotesWall notes={notes} />
-
-      {/* Floating Action Button */}
-      {!isCreating && (
-        <div className="fixed bottom-8 right-8 z-20">
-          <button
+        
+        {/* Leave a Note Button */}
+        {!isCreating && (
+          <Button
             onClick={handleStartCreating}
             className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 animate-pulse-glow border-2 border-amber-200"
           >
             📝 Leave a Note
-          </button>
-        </div>
-      )}
+          </Button>
+        )}
+      </header>
+
+      {/* Notes Wall Background */}
+      <NotesWall notes={notes} />
 
       {/* Note Creator */}
       {isCreating && (
@@ -113,7 +112,7 @@ const Index = () => {
 
       {/* Instructions for empty state */}
       {notes.length === 0 && !isCreating && (
-        <div className="absolute inset-0 flex items-center justify-center z-5 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center z-5 pointer-events-none" style={{ top: '300px' }}>
           <div className="text-center text-sky-400/60 max-w-md mx-auto px-4">
             <div className="text-6xl mb-4 animate-float">📋</div>
             <p className="text-xl font-handwritten">
