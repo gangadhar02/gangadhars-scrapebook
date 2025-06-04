@@ -84,7 +84,7 @@ const Index = () => {
     >
       {/* Header - Fixed height hero section */}
       <header className="relative z-10 text-center py-8 px-4 h-96 flex flex-col justify-center">
-        <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
+        <h1 className="text-4xl md:text-6xl font-handwritten font-extrabold text-sky-600 mb-4 drop-shadow-lg">
           Gangadhar's Scrapebook
         </h1>
         <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto mb-6">
