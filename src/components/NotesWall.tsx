@@ -20,7 +20,7 @@ export const NotesWall = ({ notes }: NotesWallProps) => {
   };
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 w-full h-full overflow-visible">
       {/* Background texture overlay */}
       <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-amber-50 to-orange-50"></div>
       

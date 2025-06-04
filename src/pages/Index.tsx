@@ -1,44 +1,86 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
 import { SocialIcons } from "@/components/SocialIcons";
 import { StickyNote as StickyNoteType } from "@/types/StickyNote";
 import { STICKY_NOTE_COLORS } from "@/types/StickyNote";
+import { findAvailablePosition, calculateRequiredHeight, positionToPercentage } from "@/utils/positionManager";
 
 const Index = () => {
   const [notes, setNotes] = useState<StickyNoteType[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
+
+  // Update container height when notes change
+  useEffect(() => {
+    if (notes.length > 0) {
+      // Convert percentage positions back to pixels for calculation
+      const pixelPositions = notes.map(note => ({
+        x: (note.position.x / 100) * window.innerWidth,
+        y: (note.position.y / 100) * containerHeight
+      }));
+      
+      const requiredHeight = calculateRequiredHeight(pixelPositions);
+      setContainerHeight(Math.max(requiredHeight, window.innerHeight));
+    }
+  }, [notes, containerHeight]);
+
   const handleNoteComplete = (noteData: {
     message: string;
     authorName?: string;
   }) => {
+    const containerWidth = window.innerWidth;
+    
+    // Get existing positions in pixels
+    const existingPixelPositions = notes.map(note => ({
+      x: (note.position.x / 100) * containerWidth,
+      y: (note.position.y / 100) * containerHeight
+    }));
+
+    // Find available position in pixels
+    const pixelPosition = findAvailablePosition(
+      existingPixelPositions,
+      containerWidth,
+      containerHeight
+    );
+
+    // Convert to percentage for storage
+    const percentagePosition = positionToPercentage(
+      pixelPosition,
+      containerWidth,
+      containerHeight
+    );
+
     const newNote: StickyNoteType = {
       id: Date.now().toString(),
       message: noteData.message,
       color: STICKY_NOTE_COLORS[colorIndex],
       authorName: noteData.authorName,
-      position: {
-        x: Math.random() * 70 + 10,
-        // Random position between 10% and 80%
-        y: Math.random() * 60 + 20 // Random position between 20% and 80%
-      },
-      rotation: Math.random() * 20 - 10,
-      // Random rotation between -10 and 10 degrees
+      position: percentagePosition,
+      rotation: Math.random() * 20 - 10, // Random rotation between -10 and 10 degrees
       createdAt: new Date()
     };
+
     setNotes(prevNotes => [...prevNotes, newNote]);
     setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
     setIsCreating(false);
   };
+
   const handleStartCreating = () => {
     setIsCreating(true);
   };
+
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
+
   return (
-    <div className="min-h-screen relative overflow-hidden paper-texture">
+    <div 
+      className="min-h-screen relative overflow-hidden paper-texture"
+      style={{ minHeight: `${containerHeight}px` }}
+    >
       {/* Header */}
       <header className="relative z-10 text-center py-8 px-4">
         <h1 className="text-4xl md:text-6xl font-marker text-sky-600 mb-4 drop-shadow-lg">
