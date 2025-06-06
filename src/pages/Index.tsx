@@ -7,6 +7,7 @@ import { STICKY_NOTE_COLORS } from "@/types/StickyNote";
 import { toast } from "sonner";
 import { useNotes, useCreateNote } from "@/hooks/useNotes";
 import { useRealtimeNotes } from "@/hooks/useRealtimeNotes";
+
 const Index = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
@@ -21,6 +22,7 @@ const Index = () => {
 
   // Set up real-time updates
   useRealtimeNotes();
+
   const handleNoteComplete = async (noteData: {
     message: string;
     authorName?: string;
@@ -44,9 +46,11 @@ const Index = () => {
       toast.error("Failed to add note. Please try again.");
     }
   };
+
   const handleStartCreating = () => {
     setIsCreating(true);
   };
+
   const handleCancelCreating = () => {
     setIsCreating(false);
   };
@@ -71,6 +75,7 @@ const Index = () => {
         </div>
       </div>;
   }
+
   return <div className="min-h-screen paper-texture">
       {/* Desktop Layout */}
       <div className="hidden md:block relative overflow-hidden min-h-screen">
@@ -95,14 +100,14 @@ const Index = () => {
             </div>
           </div>}
 
-        {/* Desktop Floating Action Button */}
-        {!isCreating && <div className="fixed bottom-8 right-8 z-20">
+        {/* Desktop Leave a Note Button - MOVED ABOVE Social Icons */}
+        {!isCreating && <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-30">
             <button onClick={handleStartCreating} disabled={createNoteMutation.isPending} className="bg-scrapbook-yellow hover:bg-yellow-300 text-amber-800 font-handwritten font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 animate-pulse-glow border-2 border-amber-200 disabled:opacity-50">
               {createNoteMutation.isPending ? "📝 Adding..." : "📝 Leave a Note"}
             </button>
           </div>}
 
-        {/* Desktop Social Icons */}
+        {/* Desktop Social Icons - Now positioned below the button */}
         <SocialIcons />
       </div>
 
@@ -180,4 +185,5 @@ const Index = () => {
       {isCreating && <NoteCreator onComplete={handleNoteComplete} onCancel={handleCancelCreating} />}
     </div>;
 };
+
 export default Index;
