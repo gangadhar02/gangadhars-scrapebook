@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -82,7 +83,7 @@ const Index = () => {
         {/* Header */}
         <header className="relative z-10 text-center py-8 px-4">
           <h1 className="text-4xl md:text-6xl font-handwritten font-black text-sky-600 mb-4 drop-shadow-lg">
-            Gangadhar's Scrapebook
+            Gangadhar's Scrapbook
           </h1>
           <p className="text-lg md:text-xl text-sky-500 max-w-2xl mx-auto">Share your thoughts, memories, and messages on this virtual wall.</p>
         </header>
@@ -118,7 +119,7 @@ const Index = () => {
           {/* Header */}
           <header className="text-center py-8 px-4 bg-scrapbook-bg relative z-10">
             <h1 className="text-4xl font-handwritten font-black text-sky-600 mb-4 drop-shadow-lg">
-              Gangadhar's Scrapebook
+              Gangadhar's Scrapbook
             </h1>
             <p className="text-lg text-sky-500 max-w-2xl mx-auto">
               Share your thoughts, memories, and messages on this virtual wall of memories.
