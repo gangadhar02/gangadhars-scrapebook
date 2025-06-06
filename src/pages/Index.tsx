@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { NotesWall } from "@/components/NotesWall";
 import { NoteCreator } from "@/components/NoteCreator";
@@ -11,7 +10,6 @@ import { useRealtimeNotes } from "@/hooks/useRealtimeNotes";
 
 const Index = () => {
   const [isCreating, setIsCreating] = useState(false);
-  const [colorIndex, setColorIndex] = useState(0);
 
   // Use Supabase hooks instead of local state
   const {
@@ -29,6 +27,9 @@ const Index = () => {
     authorName?: string;
   }) => {
     try {
+      // Use the number of existing notes to determine the next color
+      const colorIndex = notes.length % STICKY_NOTE_COLORS.length;
+      
       await createNoteMutation.mutateAsync({
         message: noteData.message,
         authorName: noteData.authorName,
@@ -39,7 +40,6 @@ const Index = () => {
         },
         rotation: Math.random() * 20 - 10
       });
-      setColorIndex(prevIndex => (prevIndex + 1) % STICKY_NOTE_COLORS.length);
       setIsCreating(false);
       toast.success("Note added successfully!");
     } catch (error) {
